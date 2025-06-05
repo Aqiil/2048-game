@@ -1,17 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-
-const GRID_SIZE = 4;
-const CELL_SIZE = 70;
-const CELL_GAP = 10;
+import {View, StyleSheet} from 'react-native';
+import {CELL_SIZE, CELL_GAP, GRID_SIZE, GRID_PADDING} from '@game/layout';
 
 export default function Grid() {
     return (
         <View style={styles.wrapper}>
-            {Array.from({ length: GRID_SIZE }).map((_, row) => (
+            {Array.from({length: GRID_SIZE}).map((_, row) => (
                 <View key={row} style={styles.row}>
-                    {Array.from({ length: GRID_SIZE }).map((_, col) => (
-                        <View key={col} style={styles.cell} />
+                    {Array.from({length: GRID_SIZE}).map((_, col) => (
+                        <View key={col} style={styles.cell}/>
                     ))}
                 </View>
             ))}
@@ -23,7 +20,7 @@ const styles = StyleSheet.create({
     wrapper: {
         backgroundColor: '#BBADA0',
         borderRadius: 10,
-        padding: CELL_GAP,
+        padding: GRID_PADDING,
         gap: CELL_GAP,
     },
     row: {
