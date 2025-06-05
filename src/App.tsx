@@ -1,17 +1,39 @@
-import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Grid from '@components/Grid';
 import Tile from '@components/Tile';
 import Title from '@components/Title';
 import ScoreRow from '@components/ScoreRow';
 import NewGameButton from '@components/NewGameButton';
-import {createInitialTiles} from '@game/logic';
-import {Tile as TileType} from '@game/types';
-import {BOARD_HEIGHT, BOARD_WIDTH} from '@game/layout';
-import {useSwipe} from "@game/useSwipe";
+import { createInitialTiles } from '@game/logic/init';
+import { Tile as TileType } from '@game/types';
+import { BOARD_HEIGHT, BOARD_WIDTH } from '@game/layout';
+import { useSwipe } from "@game/useSwipe";
+import { moveDown, moveLeft, moveRight, moveUp } from '@game/logic';
 
 export default function App() {
     const [tiles, setTiles] = useState<TileType[]>(createInitialTiles());
+
+    const swipeHandlers = useSwipe((direction) => {
+        let moved: TileType[] = tiles;
+
+        switch (direction) {
+            case 'left':
+                moved = moveLeft(tiles);
+                break;
+            case 'right':
+                moved = moveRight(tiles);
+                break;
+            case 'up':
+                moved = moveUp(tiles);
+                break;
+            case 'down':
+                moved = moveDown(tiles);
+                break;
+        }
+
+        setTiles(moved);
+    });
 
     return (
         <View style={styles.container}>
@@ -27,10 +49,6 @@ export default function App() {
         </View>
     );
 }
-
-const swipeHandlers = useSwipe((direction) => {
-    console.log('Swipe detected:', direction);
-});
 
 const styles = StyleSheet.create({
     container: {
