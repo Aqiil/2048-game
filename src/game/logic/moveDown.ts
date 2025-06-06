@@ -10,17 +10,22 @@ import { getNextId } from "@utils/id";
  * The board is transposed to treat columns as rows and then reversed. Each rows tiles are shifted and
  * merged to the left. The resulting row is reversed and transposed again to restore vertical orientation.
  * A new set of tiles is generated with the updated position and ID.
+ * The total score from merging is also calculated and returned.
  *
  * @param tiles - The current array of Tile objects on the board.
- * @returns A new array of Tile objects representing the updated board state after the down move.
+ * @returns An object containing:
+ *   - tiles: A new array of Tile objects representing the updated board state after the down move.
+ *   - score: The score gained from merging tiles after the down move.
  */
-export function moveDown(tiles: Tile[]): Tile[] {
+export function moveDown(tiles: Tile[]): { tiles: Tile[], score: number } {
     const board = reverseRows(transpose(tilesToBoard(tiles)));
     const newTiles: Tile[] = [];
+    let score = 0;
 
     for (let row = 0; row < GRID_SIZE; row++) {
-        const merged = slideAndMergeRow(board[row]);
+        const [merged, rowScore] = slideAndMergeRow(board[row]);
         const reversedBack = [...merged].reverse();
+        score += rowScore;
 
         for (let col = 0; col < GRID_SIZE; col++) {
             const tile = reversedBack[col];
@@ -35,5 +40,5 @@ export function moveDown(tiles: Tile[]): Tile[] {
         }
     }
 
-    return newTiles;
+    return { tiles: newTiles, score: score };
 }

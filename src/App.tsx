@@ -1,53 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import Grid from '@components/Grid';
 import Tile from '@components/Tile';
 import Title from '@components/Title';
 import ScoreRow from '@components/ScoreRow';
 import NewGameButton from '@components/NewGameButton';
+
 import { createInitialTiles } from '@game/logic/init';
 import { Tile as TileType } from '@game/types';
 import { BOARD_HEIGHT, BOARD_WIDTH } from '@game/layout';
-import { useSwipe } from "@game/useSwipe";
+import { useSwipe } from '@game/useSwipe';
 import { moveDown, moveLeft, moveRight, moveUp } from '@game/logic';
-import { spawnRandomTile } from "@game/logic/spawn";
-import { tilesEqual } from "@utils/compare";
+import { spawnRandomTile } from '@game/logic/spawn';
+import { tilesEqual } from '@utils/compare';
 
 export default function App() {
     const [tiles, setTiles] = useState<TileType[]>(createInitialTiles());
+    const [score, setScore] = useState(0);
+    const [bestScore, setBestScore] = useState(0);
+
+    useEffect(() => {
+        AsyncStorage.getItem('bestScore').then((stored) => {
+            if (stored) setBestScore(Number(stored));
+        });
+    }, []);
 
     const swipeHandlers = useSwipe((direction) => {
-        let moved: TileType[] = tiles;
+        let movedResult = { tiles, score: 0 };
 
         switch (direction) {
             case 'left':
-                moved = moveLeft(tiles);
+                movedResult = moveLeft(tiles);
                 break;
             case 'right':
-                moved = moveRight(tiles);
+                movedResult = moveRight(tiles);
                 break;
             case 'up':
-                moved = moveUp(tiles);
+                movedResult = moveUp(tiles);
                 break;
             case 'down':
-                moved = moveDown(tiles);
+                movedResult = moveDown(tiles);
                 break;
         }
 
-        if (!tilesEqual(tiles, moved)) {
-            const withNewTile = spawnRandomTile(moved);
+        if (!tilesEqual(tiles, movedResult.tiles)) {
+            const withNewTile = spawnRandomTile(movedResult.tiles);
             setTiles(withNewTile);
+
+            setScore((prev) => {
+                const newScore = prev + movedResult.score;
+
+                if (newScore > bestScore) {
+                    setBestScore(newScore);
+                    AsyncStorage.setItem('bestScore', newScore.toString());
+                }
+
+                return newScore;
+            });
         }
     });
 
     return (
         <View style={styles.container}>
             <Title/>
-            <ScoreRow/>
+            <ScoreRow score={score} best={bestScore}/>
             <NewGameButton/>
             <View style={styles.board} {...swipeHandlers}>
                 <Grid/>
-                {tiles.map(tile => (
+                {tiles.map((tile) => (
                     <Tile key={tile.id} tile={tile}/>
                 ))}
             </View>

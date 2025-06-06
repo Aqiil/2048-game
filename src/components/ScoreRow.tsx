@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import ScoreBox from './ScoreBox';
+import { StyleSheet, View } from 'react-native';
 
-export default function ScoreRow() {
+import ScoreBox from './ScoreBox';
+import { ScoreRowProps } from '@game/types'
+
+export default function ScoreRow({ score, best }: ScoreRowProps) {
     return (
         <View style={styles.row}>
-            <ScoreBox label="SCORE" value={184} />
-            <ScoreBox label="BEST" value={25492} />
+            <ScoreBox label="SCORE" value={score}/>
+            <ScoreBox label="BEST" value={best}/>
         </View>
     );
 }

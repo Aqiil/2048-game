@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { ScoreBoxProps } from "@game/types";
 
-export default function ScoreBox({ label, value }: { label: string; value: number }) {
+export default function ScoreBox({ label, value }: ScoreBoxProps) {
     return (
         <View style={styles.scoreBox}>
             <Text style={styles.scoreLabel}>{label}</Text>

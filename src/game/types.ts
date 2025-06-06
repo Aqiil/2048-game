@@ -6,3 +6,13 @@ export interface Tile {
     row: number;
     col: number;
 }
+
+export interface ScoreBoxProps {
+    label: string;
+    value: number;
+}
+
+export interface ScoreRowProps {
+    score: number;
+    best: number;
+}

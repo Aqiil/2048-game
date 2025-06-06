@@ -1,5 +1,6 @@
 import { Tile } from '@game/types';
 import { GRID_SIZE } from '@game/layout';
+import { getNextId } from "@utils/id";
 
 /**
  * Slides and merges a row of tiles to the LEFT.
@@ -8,16 +9,21 @@ import { GRID_SIZE } from '@game/layout';
  * Fills remaining cells with null to match row length.
  *
  * @param row - A single row of tiles of length GRID_SIZE containing Tile or null.
- * @returns A new row of same length with merged and shifted tiles to the left.
+ * @returns An object containing:
+ *   - result: A new row of same length with merged and shifted tiles to the left.
+ *   - score: The score gained from merging tiles leftward.
  */
-export function slideAndMergeRow(row: (Tile | null)[]): (Tile | null)[] {
+export function slideAndMergeRow(row: (Tile | null)[]): [(Tile | null)[], number] {
     const compact = row.filter(Boolean) as Tile[];
     const result: (Tile | null)[] = [];
+    let score = 0;
     let i = 0;
 
     while (i < compact.length) {
         if (i + 1 < compact.length && compact[i].value === compact[i + 1].value) {
-            result.push({ ...compact[i], value: compact[i].value * 2 });
+            const newValue = compact[i].value * 2;
+            result.push({ ...compact[i], value: newValue, id: getNextId() });
+            score += newValue;
             i += 2;
         } else {
             result.push({ ...compact[i] });
@@ -29,5 +35,5 @@ export function slideAndMergeRow(row: (Tile | null)[]): (Tile | null)[] {
         result.push(null);
     }
 
-    return result;
+    return [result, score];
 }

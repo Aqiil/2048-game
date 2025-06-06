@@ -9,16 +9,21 @@ import { getNextId } from '@utils/id';
  *
  * For each row, adjacent tiles with the same value are merged, and tiles are shifted to the left.
  * A new set of tiles is generated with updated positions and unique IDs.
+ * The total score from merging is also calculated and returned.
  *
  * @param tiles - The current array of Tile objects on the board.
- * @returns A new array of Tile objects representing the updated board state after the left move.
+ * @returns An object containing:
+ *   - tiles: A new array of Tile objects representing the updated board state after the left move.
+ *   - score: The score gained from merging tiles after the left move.
  */
-export function moveLeft(tiles: Tile[]): Tile[] {
+export function moveLeft(tiles: Tile[]): { tiles: Tile[]; score: number } {
     const board = tilesToBoard(tiles);
     const newTiles: Tile[] = [];
+    let score = 0;
 
     for (let row = 0; row < GRID_SIZE; row++) {
-        const newRow = slideAndMergeRow(board[row]);
+        const [newRow, rowScore] = slideAndMergeRow(board[row]);
+        score += rowScore;
 
         for (let col = 0; col < GRID_SIZE; col++) {
             const tile = newRow[col];
@@ -33,5 +38,5 @@ export function moveLeft(tiles: Tile[]): Tile[] {
         }
     }
 
-    return newTiles;
+    return { tiles: newTiles, score };
 }
