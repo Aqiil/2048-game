@@ -10,6 +10,8 @@ import { Tile as TileType } from '@game/types';
 import { BOARD_HEIGHT, BOARD_WIDTH } from '@game/layout';
 import { useSwipe } from "@game/useSwipe";
 import { moveDown, moveLeft, moveRight, moveUp } from '@game/logic';
+import { spawnRandomTile } from "@game/logic/spawn";
+import { tilesEqual } from "@utils/compare";
 
 export default function App() {
     const [tiles, setTiles] = useState<TileType[]>(createInitialTiles());
@@ -32,7 +34,10 @@ export default function App() {
                 break;
         }
 
-        setTiles(moved);
+        if (!tilesEqual(tiles, moved)) {
+            const withNewTile = spawnRandomTile(moved);
+            setTiles(withNewTile);
+        }
     });
 
     return (
