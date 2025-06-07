@@ -7,6 +7,7 @@ import Tile from '@components/Tile';
 import Title from '@components/Title';
 import ScoreRow from '@components/ScoreRow';
 import NewGameButton from '@components/NewGameButton';
+import GameOverOverlay from "@components/GameOverOverlay";
 
 import { createInitialTiles } from '@game/logic/init';
 import { Tile as TileType } from '@game/types';
@@ -15,11 +16,13 @@ import { useSwipe } from '@game/useSwipe';
 import { moveDown, moveLeft, moveRight, moveUp } from '@game/logic';
 import { spawnRandomTile } from '@game/logic/spawn';
 import { tilesEqual } from '@utils/compare';
+import { isGameOver } from "@utils/game";
 
 export default function App() {
     const [tiles, setTiles] = useState<TileType[]>(createInitialTiles());
     const [score, setScore] = useState(0);
     const [bestScore, setBestScore] = useState(0);
+    const [gameOver, setGameOver] = useState(false);
 
     useEffect(() => {
         AsyncStorage.getItem('bestScore').then((stored) => {
@@ -59,19 +62,31 @@ export default function App() {
 
                 return newScore;
             });
+
+            if (isGameOver(withNewTile)) {
+                setGameOver(true);
+            }
         }
     });
+
+    const handleNewGame = () => {
+        const freshTiles = createInitialTiles();
+        setTiles(freshTiles);
+        setScore(0);
+        setGameOver(false);
+    };
 
     return (
         <View style={styles.container}>
             <Title/>
             <ScoreRow score={score} best={bestScore}/>
-            <NewGameButton/>
+            <NewGameButton onPress={handleNewGame}/>
             <View style={styles.board} {...swipeHandlers}>
                 <Grid/>
                 {tiles.map((tile) => (
                     <Tile key={tile.id} tile={tile}/>
                 ))}
+                {gameOver && <GameOverOverlay/>}
             </View>
         </View>
     );

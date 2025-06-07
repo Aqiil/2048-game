@@ -1,8 +1,13 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function Title() {
-    return <Text style={styles.title}>2048</Text>;
+    return (
+        <View>
+            <Text style={styles.title}>2048</Text>
+            <Text style={styles.message}>Eid Mubarak!</Text>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -10,5 +15,12 @@ const styles = StyleSheet.create({
         fontSize: 48,
         fontWeight: 'bold',
         color: '#776E65',
+        textAlign: 'center',
     },
+    message: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#776E65',
+        textAlign: 'center',
+    }
 });

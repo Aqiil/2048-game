@@ -16,3 +16,7 @@ export interface ScoreRowProps {
     score: number;
     best: number;
 }
+
+export interface NewGameButtonProps {
+    onPress: () => void;
+}

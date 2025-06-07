@@ -1,7 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { NewGameButtonProps } from "@game/types";
 
-export default function NewGameButton({ onPress }: { onPress?: () => void }) {
+export default function NewGameButton({ onPress }: NewGameButtonProps) {
     return (
         <TouchableOpacity style={styles.button} onPress={onPress}>
             <Text style={styles.text}>New Game</Text>
