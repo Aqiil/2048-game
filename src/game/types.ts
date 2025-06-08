@@ -7,6 +7,10 @@ export interface Tile {
     col: number;
 }
 
+export interface TileProps {
+    tile: Tile;
+}
+
 export interface ScoreBoxProps {
     label: string;
     value: number;
