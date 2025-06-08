@@ -5,7 +5,6 @@ export default function Title() {
     return (
         <View>
             <Text style={styles.title}>2048</Text>
-            <Text style={styles.message}>Eid Mubarak!</Text>
         </View>
     )
 }
